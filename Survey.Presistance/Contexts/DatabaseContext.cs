@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Survey.Application.Interfaces;
+using Survey.Common;
 using Survey.Domain.Entities.Respond;
 using Survey.Domain.Entities.Survey;
 using Survey.Domain.Entities.Users;
@@ -27,7 +28,9 @@ namespace Survey.Presistance.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+        //    modelBuilder.Entity<Answer>()       // THIS IS FIRST
+        //.HasOne(u => u.Reespond).WithMany(u => u.Answers).IsRequired().OnDelete(DeleteBehavior.);
+
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Survey>().HasQueryFilter(p => !p.IsRemoved);
@@ -35,8 +38,9 @@ namespace Survey.Presistance.Contexts
         }
         private void SeedData(ModelBuilder modelBuilder)
         {
+            (var hash, var salt) = PasswordManager.Hash("123456");
 
-            modelBuilder.Entity<User>().HasData(new User { Id = 1, Email = "m@m.com", FullName = "Admin", Password = "123456" });
+            modelBuilder.Entity<User>().HasData(new User { Id = 1, Email = "m@m.com", FullName = "Admin", PasswordHash = hash,PasswordSalt=salt,IsActive=true });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Survey>().HasData(new Domain.Entities.Survey.Survey { Id = 1, UserId = 1, Title = "Developer Roles" });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Question>().HasData(new Domain.Entities.Survey.Question { Id = 1, SurveyId = 1, Title = "Developer Type" });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Question>().HasData(new Domain.Entities.Survey.Question { Id = 2, SurveyId = 1, Title = "Coding as a Hobby ", Description = "Many developers work on code outside of work. About 78% of our respondents say that they code as a hobby. Other responsibilities outside of software can reduce developers' engagement in coding as a hobby; developers who say they have children or other caretaking responsibilities are less likely to code as a hobby. Respondents who are women are also less likely to say they code as a hobby." });

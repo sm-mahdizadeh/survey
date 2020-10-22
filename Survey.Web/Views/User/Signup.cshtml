@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Signup";
+}
+
+
+@using (Html.BeginForm("signup", "user", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <div class="form-group">
+
+        <div class="col-md-10">
+            <input type="text" id="fullName" placeholder="Full Name" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-10">
+            <input type="text" id="email" placeholder="Email" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-10">
+            <input type="password" id="password" placeholder="Password" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-10">
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" class="btn btn-default" value="Sign Up" onclick="signup()"/>
+        </div>
+    </div>
+}
+
+
+<script>
+    function signup() {
+
+        var fullName = $("#fullName").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var confirmPassword = $("#confirmPassword").val();
+        alert(1);
+        var postData = {
+            fullName: fullName,
+            email: email,
+            password: password,
+        };
+        alert(2);
+        $.ajax({
+            type: "POST",
+            url: "/user/signup",
+            data: postData,
+            success: function (result) {
+                alert(3);
+                if (result.isSuccess ) {
+                    window.location.replace("/");
+                }
+                else {
+
+                    swal.fire(
+                        'هشدار!',
+                        data.message,
+                        'warning'
+                    );
+                }
+            },
+            error: function (request, status, error) {
+                swal.fire(
+                    'هشدار!',
+                    request.responseText,
+                    'warning'
+                );
+            }
+        });
+    }
+</script>

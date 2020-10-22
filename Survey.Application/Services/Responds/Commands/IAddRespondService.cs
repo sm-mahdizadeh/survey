@@ -19,14 +19,14 @@ namespace Survey.Application.Services.Responds.Commands
             var respond = new Respond { SurveyId = surveyId, UserId = userId, UserIp = userIp, UserInfo = userInfo, CreateDate = DateTime.Now };
             Context.Responds.Add(respond);
             Context.SaveChanges();
-            foreach (var item in optionIds)
-            {
-                Context.Answers.Add(new Answer {
-                    RespondId=respond.Id,
-                    OptionId=item,
-                });
-            }
-            Context.SaveChanges();
+            //foreach (var item in optionIds)
+            //{
+            //    Context.Answers.Add(new Answer {
+            //        RespondId=respond.Id,
+            //        OptionId=item,
+            //    });
+            //}
+            //Context.SaveChanges();
             return true;
         }
     }

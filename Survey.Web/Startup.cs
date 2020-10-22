@@ -14,6 +14,7 @@ using Survey.Application.Interfaces;
 using Survey.Application.Services.Responds;
 using Survey.Application.Services.Survey.Commands;
 using Survey.Application.Services.Survey.Queries;
+using Survey.Application.Services.Users;
 using Survey.Application.Services.Users.Queries;
 using Survey.Presistance.Contexts;
 
@@ -33,6 +34,7 @@ namespace Survey.Web
         {
             services.AddScoped<IDatabaseContext, DatabaseContext>();
             services.AddScoped<IRespondFasad, RespondFasad>();
+            services.AddScoped<IUserFasad, UserFasad>();
 
             services.AddScoped<IGetUserService, GetUserService>();
             services.AddScoped<IGetSurveyService, GetSurveyService>();

@@ -27,13 +27,9 @@ namespace Survey.Presistance.Migrations
 
                     b.Property<int>("OptionId");
 
-                    b.Property<int>("RespondId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OptionId");
-
-                    b.HasIndex("RespondId");
 
                     b.ToTable("Answers");
                 });
@@ -387,7 +383,11 @@ namespace Survey.Presistance.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<string>("Password");
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PasswordSalt");
 
                     b.HasKey("Id");
 
@@ -403,7 +403,9 @@ namespace Survey.Presistance.Migrations
                             Id = 1,
                             Email = "m@m.com",
                             FullName = "Admin",
-                            Password = "123456"
+                            IsActive = true,
+                            PasswordHash = "384004178",
+                            PasswordSalt = "790966436"
                         });
                 });
 
@@ -412,11 +414,6 @@ namespace Survey.Presistance.Migrations
                     b.HasOne("Survey.Domain.Entities.Survey.Option", "Option")
                         .WithMany("Answers")
                         .HasForeignKey("OptionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Survey.Domain.Entities.Respond.Respond", "Reespond")
-                        .WithMany("Answers")
-                        .HasForeignKey("RespondId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

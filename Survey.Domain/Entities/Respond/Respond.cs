@@ -16,6 +16,6 @@ namespace Survey.Domain.Entities.Respond
         public virtual Survey.Survey Suurvey { get; set; }
         public DateTime CreateDate { get; set; }
 
-        public virtual ICollection<Answer> Answers { get; set; }
+      //  public virtual ICollection<Answer> Answers { get; set; }
     }
 }

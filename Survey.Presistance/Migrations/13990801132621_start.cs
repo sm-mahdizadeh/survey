@@ -16,7 +16,9 @@ namespace Survey.Presistance.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FullName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    PasswordHash = table.Column<string>(nullable: true),
+                    PasswordSalt = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,7 +126,6 @@ namespace Survey.Presistance.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RespondId = table.Column<int>(nullable: false),
                     OptionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -136,18 +137,12 @@ namespace Survey.Presistance.Migrations
                         principalTable: "Options",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Answers_Responds_RespondId",
-                        column: x => x.RespondId,
-                        principalTable: "Responds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "FullName", "Password" },
-                values: new object[] { 1, "m@m.com", "Admin", "123456" });
+                columns: new[] { "Id", "Email", "FullName", "IsActive", "PasswordHash", "PasswordSalt" },
+                values: new object[] { 1, "m@m.com", "Admin", true, "384004178", "790966436" });
 
             migrationBuilder.InsertData(
                 table: "Surveys",
@@ -218,11 +213,6 @@ namespace Survey.Presistance.Migrations
                 column: "OptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_RespondId",
-                table: "Answers",
-                column: "RespondId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Options_QuestionId",
                 table: "Options",
                 column: "QuestionId");
@@ -261,10 +251,10 @@ namespace Survey.Presistance.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "Options");
+                name: "Responds");
 
             migrationBuilder.DropTable(
-                name: "Responds");
+                name: "Options");
 
             migrationBuilder.DropTable(
                 name: "Questions");
