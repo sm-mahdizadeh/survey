@@ -1,0 +1,46 @@
+﻿@using Survey.Application.Services.Survey.Queries;
+@model IEnumerable<GetSurveyDto>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="/Home/Help">Survey</a>.</p>
+
+    <h4 class="display-4">Active Survey</h4>
+    <div class="row">
+        @foreach (var survey in Model.Where(w => w.IsActive))
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@survey.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@survey.Description</h6>
+                        <p class="card-text"></p>
+                        <a href="/survey/edit/@(survey.Id)" class="card-link">Edit</a>
+                        <a href="/survey/Respond/@(survey.Id)" class="card-link">Respond</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <hr />
+    <h4 class="display-4">Diactive Survey</h4>
+    <div class="row">
+        @foreach (var survey in Model.Where(w => !w.IsActive))
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@survey.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@survey.Description</h6>
+                        <p class="card-text"></p>
+                        <a href="/survey/edit/@(survey.Id)" class="card-link">Edit</a>
+                        @*<a href="#" class="card-link">Respond</a>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

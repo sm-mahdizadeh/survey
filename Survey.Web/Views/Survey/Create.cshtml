@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "Create New Survey";
+}
+
+
+<div class="row">
+    <input class="form-control" placeholder="Title" id="title" />
+</div>
+<div class="row">
+    <textarea class="form-control" placeholder="Description" id="description"></textarea>
+</div>
+<br />
+
+<div class="row">
+    <a class="btn btn-secondary">Cancel</a>
+    <a class="btn btn-success" onclick="create()">Save & Next</a>
+</div>
+
+<script>
+
+    function create() {
+
+        var title = $("#title").val();
+        var description = $("#description").val();
+
+        var postData = {
+            title: title,
+            description: description,
+        };
+
+        $.ajax({
+            //contentType: 'application/x-www-form-urlencoded',
+            //dataType: 'json',
+            type: "POST",
+            url: "/Survey/Create",
+            data: postData,
+            success: function (result) {
+                if (result.isSuccess == true) {
+                    window.location.replace("/survey/edit/" + result.data);
+                }
+                else {
+
+                    swal.fire(
+                        'هشدار!',
+                        data.message,
+                        'warning'
+                    );
+                }
+            },
+            error: function (request, status, error) {
+                swal.fire(
+                    'هشدار!',
+                    request.responseText,
+                    'warning'
+                );
+            }
+        });
+    }
+</script>

@@ -1,0 +1,191 @@
+﻿@using Survey.Application.Services.Survey.Queries;
+@model GetSurveyDto
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<div class="row">
+    <input class="form-control" placeholder="Title" value="@Model.Title" />
+</div>
+<div class="row">
+    <textarea class="form-control" placeholder="Description" value="@Model.Description"></textarea>
+</div>
+<br />
+
+@*<div class="row">
+        <div class="col-3">
+            <a class="btn btn-success btn-block" style="margin-bottom:5px" onclick="addNewQuestion();">Add New Question</a>
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">...</div>
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...</div>
+                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+                <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action ">
+                            Cras justo odio
+                        </a>
+                        <a href="#" class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis in<span class="badge badge-danger badge-pill" onclick="removeOption();">X</span></a>
+                        <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+                        <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+                        <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Vestibulum at eros</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<div class="list-group">
+    @if (Model.Questions?.Any() == true)
+    {
+        foreach (var item in Model.Questions)
+        {
+            <a href="#" class="list-group-item d-flex justify-content-between align-items-center">@item.Title<span class="badge badge-danger badge-pill" onclick="removeOption(@(item.Id));">X</span></a>
+        }
+
+    }
+    <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModal" ">+ Add New Question</a>
+</div>
+
+<div class="row">
+    <a class="btn btn-secondary">Cancel</a>
+    <a class="btn btn-danger">Remove</a>
+    <a class="btn btn-warning">Diactive</a>
+    <a class="btn btn-success">Submit</a>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="newQuestionTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="newQuestionDescription"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createNewQuestion();">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var html = `<div class="row">
+    <input id='newQuestionTitle' class="form-control" placeholder="Title" value="" />
+</div>
+<div class="row">
+    <textarea id='newQuestionDescription' class="form-control" placeholder="Description" value=""></textarea>
+</div>`;
+    function createNewQuestion() {
+        var postData = {
+                    surveyId:'@Model.Id',
+                    title: $("#newQuestionTitle").val(),
+                    description: $("#newQuestionDescription").val(),
+                };
+
+                $.ajax({
+
+                    type: "POST",
+                    url: "/question/create",
+                    data: postData,
+                    success: function (result) {
+                        if (result.isSuccess == true) {
+                            swal.fire(
+                                'Message!',
+                                "Success",
+                                'info'
+                            ).then((result) => { window.location.reload(); });
+                        }
+                        else {
+
+                            swal.fire(
+                                'هشدار!',
+                                data.message,
+                                'warning'
+                            );
+                        }
+                    },
+                    error: function (request, status, error) {
+                        swal.fire(
+                            'هشدار!',
+                            request.responseText,
+                            'warning'
+                        );
+                    }
+                });
+    }
+    function removeOption(id) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            footer: '<a href>Why do I have this issue?</a>',
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+        }).then((result) => {
+            //if (result.isConfirm) {
+                 var postData = {
+                    surveyId:'@Model.Id',
+                  questionId:id
+                };
+
+                $.ajax({
+
+                    type: "POST",
+                        url: "/question/remove",
+                            data: postData,
+                                success: function (result) {
+                                    if (result.isSuccess == true) {
+                                        swal.fire(
+                                            'Message!',
+                                            "Success",
+                                            'info'
+                                        ).then((result) => { window.location.reload(); });
+                                    }
+                                    else {
+
+                                        swal.fire(
+                                            'هشدار!',
+                                            data.message,
+                                            'warning'
+                                        );
+                                    }
+                                },
+                    error: function (request, status, error) {
+                        swal.fire(
+                            'هشدار!',
+                            request.responseText,
+                            'warning'
+                        );
+                    }
+
+                });
+        //}
+        });
+    }
+
+</script>
+

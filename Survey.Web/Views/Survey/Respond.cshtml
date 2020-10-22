@@ -1,0 +1,85 @@
+﻿@using Survey.Application.Services.Survey.Queries;
+@model GetSurveyDto
+@{
+    ViewData["Title"] = Model.Title;
+    var i = 0;
+    var total = Model?.Questions?.Count() ?? 0;
+}
+
+<h1>@Model.Title</h1>
+<h3>@Model.Description</h3>
+
+@foreach (var question in Model.Questions)
+{
+
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-header">  @question.Title ( @(++i) / @total )</div>
+        <div class="card-body">
+            <h5 class="card-title">@question.Description</h5>
+
+            @if (question.Options?.Any() == true)
+            {
+                foreach (var option in question.Options)
+                {
+                    <p class="card-text"><label><input type="radio" name="q@(question.Id)" id="o@(option.Id)" data-code="@(question.Id),@(option.Id);"/> @option.Title </label></p>
+                }
+            }
+        </div>
+    </div>
+
+
+}
+
+<div class="row">
+    <a class="btn btn-success btn-block" onclick="submit();">Submit</a>
+</div>
+
+<script>
+
+    function submit() {
+
+        var result = "";
+
+        $("input[type=radio]:checked").each(function (index, element) {
+
+            result += $(element).data('code') ;
+        });
+
+         var postData = {
+             id: '@Model.Id',
+             answers: result,
+                };
+
+                $.ajax({
+
+                    type: "POST",
+                    url: "/survey/Respond",
+                    data: postData,
+                    success: function (result) {
+                        if (result.isSuccess == true) {
+                            swal.fire(
+                                'Message!',
+                                "Success",
+                                'info'
+                            ).then((result) => { window.location.reload(); });
+                        }
+                        else {
+
+                            swal.fire(
+                                'هشدار!',
+                                data.message,
+                                'warning'
+                            );
+                        }
+                    },
+                    error: function (request, status, error) {
+                        swal.fire(
+                            'هشدار!',
+                            request.responseText,
+                            'warning'
+                        );
+                    }
+                });
+
+    }
+</script>
