@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,11 +33,24 @@ namespace Survey.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.LoginPath = new PathString("/User/Signin");
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5.0);
+            });
+
+
             services.AddScoped<IDatabaseContext, DatabaseContext>();
             services.AddScoped<IRespondFasad, RespondFasad>();
             services.AddScoped<IUserFasad, UserFasad>();
 
-            services.AddScoped<IGetUserService, GetUserService>();
             services.AddScoped<IGetSurveyService, GetSurveyService>();
             services.AddScoped<IGetSurveysService, GetSurveysService>();
             services.AddScoped<IAddSurveyService, AddSurveyService>();
@@ -73,8 +87,8 @@ namespace Survey.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
-
+            //app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

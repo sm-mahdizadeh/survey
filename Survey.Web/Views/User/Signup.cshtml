@@ -48,19 +48,16 @@
         var email = $("#email").val();
         var password = $("#password").val();
         var confirmPassword = $("#confirmPassword").val();
-        alert(1);
-        var postData = {
+        var data = {
             fullName: fullName,
             email: email,
             password: password,
         };
-        alert(2);
         $.ajax({
             type: "POST",
             url: "/user/signup",
-            data: postData,
+            data: data,
             success: function (result) {
-                alert(3);
                 if (result.isSuccess ) {
                     window.location.replace("/");
                 }
@@ -68,7 +65,7 @@
 
                     swal.fire(
                         'هشدار!',
-                        data.message,
+                        result.message,
                         'warning'
                     );
                 }

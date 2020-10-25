@@ -10,7 +10,7 @@ namespace Survey.Application.Services.Survey.Queries
 {
     public interface IGetSurveysService
     {
-        List<GetSurveyDto> Execute(RequestGetUserDto request);
+        List<GetSurveyDto> Execute(RequestGetUsersDto request);
     }
     public class GetSurveysService : IGetSurveysService
     {
@@ -21,7 +21,7 @@ namespace Survey.Application.Services.Survey.Queries
             _context = context;
         }
 
-        public List<GetSurveyDto> Execute(RequestGetUserDto request)
+        public List<GetSurveyDto> Execute(RequestGetUsersDto request)
         {
             var surveys = _context.Surveys.AsQueryable();
             if (!string.IsNullOrWhiteSpace(request.Searchkey))

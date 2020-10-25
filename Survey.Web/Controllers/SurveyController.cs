@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Survey.Application.Services.Responds;
 using Survey.Application.Services.Survey.Commands;
@@ -25,16 +26,22 @@ namespace Survey.Web.Controllers
         {
             return View();
         }
+
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
+
+        [Authorize]
         [HttpPost]
         public JsonResult Create(string title, string description)
         {
             var result = _addSurveyService.Exeute(1, title, description);
             return Json(new { IsSuccess = true, Data = result });
         }
+
+        [Authorize]
         public IActionResult Edit(int id)
         {
             var model = _getSurveyService.Execute(id);
@@ -45,6 +52,7 @@ namespace Survey.Web.Controllers
             var model = _getSurveyService.Execute(id);
             return View(model);
         }
+
 
         [HttpPost]
         public JsonResult Respond(int id,string answers)
@@ -60,6 +68,7 @@ namespace Survey.Web.Controllers
             return Json(new { IsSuccess=result});
         }
 
+        [Authorize]
         public IActionResult Details(int id)
         {
             var model = _getSurveyService.Execute(id);

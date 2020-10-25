@@ -10,13 +10,14 @@ namespace Survey.Common
         public static (string hash,string salt) Hash(string password)
         {
             var salt= new Random(DateTime.Now.Millisecond).Next().ToString();
-            var hash = (password + ConstSalt + salt).GetHashCode().ToString();
+            var hash = GetHash(password, salt);
 
             return (hash, salt);
         }
         public static bool Verify(string password, string hash,string salt)
         {
-            return (password + ConstSalt + salt).GetHashCode().Equals(hash);
+            return GetHash(password , salt).Equals(hash);
         }
+        private static string GetHash(string password, string salt) => (password + ConstSalt + salt)/*.GetHashCode()*/.ToString();
     }
 }

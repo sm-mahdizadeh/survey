@@ -1,32 +1,83 @@
 ﻿using Survey.Application.Interfaces;
+using Survey.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Survey.Common;
+
 namespace Survey.Application.Services.Users.Queries
 {
     public interface IGetUserService
     {
-        List<GetUsersDto> Execute(RequestGetUserDto request);
+        ServiceResultDto<GetUserDto> Execute(string username, string password);
     }
-    public class GetUserService:BaseService, IGetUserService
+
+    public class GetUserService : BaseService, IGetUserService
     {
+
         public GetUserService(IDatabaseContext context) : base(context) { }
 
-
-        public List<GetUsersDto> Execute(RequestGetUserDto request)
+        public ServiceResultDto<GetUserDto> Execute(string username, string password)
         {
-            var users = Context.Users.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(request.Searchkey))
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                 users = users.Where(w => w.FullName.Contains(request.Searchkey) || w.Email.Contains(request.Searchkey));
+                return new ServiceResultDto<GetUserDto>("نام کاربری و رمز عبور را وارد نمایید");
+
             }
-            return users.ToPaged(request.Page,20,out var total).Select(s=>new GetUsersDto {
-                Email=s.Email,
-                FullName=s.FullName,
-                Id=s.Id
-            }).ToList();
+
+
+
+            var user = Context.Users.FirstOrDefault(p => p.Email.Equals(username) && p.IsActive == true);
+
+            if (user == null)
+            {
+                return new ServiceResultDto<GetUserDto>("ایمیل یا رمز عبور اشتباه است");
+
+            }
+
+
+            var isVerify = PasswordManager.Verify(password, user.PasswordHash, user.PasswordSalt);
+            if (!isVerify)
+            {
+                return new ServiceResultDto<GetUserDto>("ایمیل یا رمز عبور اشتباه است");
+            }
+
+
+            return new ServiceResultDto<GetUserDto>(new GetUserDto
+            {
+                UserId = user.Id,
+                Name = user.FullName
+            });
         }
+    }
+
+    public class GetUserDto
+    {
+        public long UserId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class ServiceResultDto<T> : ServiceResultDto
+    {
+        public ServiceResultDto() { }
+        public ServiceResultDto(string message) : base(message) { }
+        public ServiceResultDto(T data, string message = "عملیات با موفقیت انجام شد.")
+        {
+            IsSuccess = true;
+            Data = data;
+            Message = message;
+        }
+        public T Data { get; set; }
+    }
+    public class ServiceResultDto
+    {
+        public ServiceResultDto() { }
+        public ServiceResultDto(string message)
+        {
+            Message = message;
+        }
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Survey.Web.Controllers
         }
         public IActionResult Index()
         {
-            var model=_getSurveysService.Execute(new Application.Services.Users.Queries.RequestGetUserDto { Page = 1, Searchkey = "" });
+            var model=_getSurveysService.Execute(new Application.Services.Users.Queries.RequestGetUsersDto { Page = 1, Searchkey = "" });
             return View(model);
         }
 
