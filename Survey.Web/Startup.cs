@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Survey.Application.Interfaces;
 using Survey.Application.Services.Responds;
+using Survey.Application.Services.Survey;
 using Survey.Application.Services.Survey.Commands;
 using Survey.Application.Services.Survey.Queries;
 using Survey.Application.Services.Users;
@@ -48,16 +49,15 @@ namespace Survey.Web
 
 
             services.AddScoped<IDatabaseContext, DatabaseContext>();
+
+            services.AddScoped<ISurveyFasad, SurveyFasad>();
             services.AddScoped<IRespondFasad, RespondFasad>();
             services.AddScoped<IUserFasad, UserFasad>();
 
-            services.AddScoped<IGetSurveyService, GetSurveyService>();
-            services.AddScoped<IGetSurveysService, GetSurveysService>();
-            services.AddScoped<IAddSurveyService, AddSurveyService>();
             services.AddScoped<IAddQuestionService, AddQuestionService>();
             services.AddScoped<IRemoveQuestionService, RemoveQuestionService>();
 
-            string connectionString = "Data Source=.;Initial Catalog=SurveyDb;Integrated Security=True;";
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddEntityFrameworkSqlServer().AddDbContext<DatabaseContext>(option => option.UseSqlServer(connectionString));
 
             services.Configure<CookiePolicyOptions>(options =>

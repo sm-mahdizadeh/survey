@@ -1,11 +1,17 @@
 ﻿@using Survey.Application.Services.Survey.Queries;
-@model IEnumerable<GetSurveyDto>
+@using  Survey.Web.Utility;
+@model IEnumerable<GetSurveysDto>
 @{
     ViewData["Title"] = "Home Page";
 }
 <style>
-    .card{
-        margin-bottom:10px;
+    .card {
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        text-align: left;
+        margin-bottom: 0;
     }
 </style>
 <div class="text-center">
@@ -20,9 +26,16 @@
                     <div class="card-body">
                         <h5 class="card-title">@survey.Title</h5>
                         <h6 class="card-subtitle mb-2 text-muted">@survey.Description</h6>
-                        <p class="card-text"></p>
-                        <a href="/survey/edit/@(survey.Id)" class="card-link">Edit</a>
+                        <p class="card-text">Owner User: @survey.UserFullName</p>
+                        <p class="card-text">Create Date: @survey.CreateDate.ToShortDateString()</p>
+                        <p class="card-text">Questions Count: @(survey.QuestionsCount)</p>
+                        @if (UserUtility.GetUserId(User) == survey.UserId)
+                        {
+                            <a href="/survey/edit/@(survey.Id)" class="card-link">Edit</a>}
+                        else
+                        {
                         <a href="/survey/Respond/@(survey.Id)" class="card-link">Respond</a>
+                        }
                     </div>
                 </div>
             </div>

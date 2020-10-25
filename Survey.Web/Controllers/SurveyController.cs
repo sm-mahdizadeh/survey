@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Survey.Application.Services.Responds;
+using Survey.Application.Services.Survey;
 using Survey.Application.Services.Survey.Commands;
 using Survey.Application.Services.Survey.Queries;
 
@@ -12,14 +13,12 @@ namespace Survey.Web.Controllers
 {
     public class SurveyController : Controller
     {
-        private readonly IAddSurveyService _addSurveyService;
-        private readonly IGetSurveyService _getSurveyService;
+        private readonly ISurveyFasad _surveyServices;
         private readonly IRespondFasad _respondServices;
-        public SurveyController(IAddSurveyService addSurveyService, IGetSurveyService getSurveyService,IRespondFasad respondServices)
-        {
-            _addSurveyService = addSurveyService;
-            _getSurveyService = getSurveyService;
 
+        public SurveyController(ISurveyFasad surveyServices, IGetSurveyService getSurveyService,IRespondFasad respondServices)
+        {
+            _surveyServices = surveyServices;
             _respondServices = respondServices;
         }
         public IActionResult Index()
@@ -37,19 +36,19 @@ namespace Survey.Web.Controllers
         [HttpPost]
         public JsonResult Create(string title, string description)
         {
-            var result = _addSurveyService.Exeute(1, title, description);
+            var result = _surveyServices.AddSurvey.Exeute(1, title, description);
             return Json(new { IsSuccess = true, Data = result });
         }
 
         [Authorize]
         public IActionResult Edit(int id)
         {
-            var model = _getSurveyService.Execute(id);
+            var model = _surveyServices.GetSurvey.Execute(id);
             return View(model);
         }
         public IActionResult Respond(int id)
         {
-            var model = _getSurveyService.Execute(id);
+            var model = _surveyServices.GetSurvey.Execute(id);
             return View(model);
         }
 
@@ -71,7 +70,7 @@ namespace Survey.Web.Controllers
         [Authorize]
         public IActionResult Details(int id)
         {
-            var model = _getSurveyService.Execute(id);
+            var model = _surveyServices.GetSurvey.Execute(id);
             return View(model);
         }
 

@@ -28,7 +28,8 @@ namespace Survey.Application.Services.Survey.Queries
                 Id = survey.Id,
                 CreateDate = survey.CreateDate,
                 IsActive = survey.IsActive,
-                OwnerUserId = survey.UserId,
+                UserId = survey.UserId,
+                UserFullName = Context.Users.FirstOrDefault(f => f.Id == survey.UserId).FullName,
                 Questions = Context.Questions.Where(w=>w.SurveyId==id)?.Select(s => new GetQuestionsDto
                 {
                     Id = s.Id,
@@ -46,7 +47,8 @@ namespace Survey.Application.Services.Survey.Queries
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
-        public int OwnerUserId { get; set; }
+        public int UserId { get; set; }
+        public string UserFullName { get; set; }
         public DateTime CreateDate { get; set; }
         public GetQuestionsDto[] Questions { get; set; }
     }

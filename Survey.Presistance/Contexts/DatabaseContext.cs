@@ -41,7 +41,7 @@ namespace Survey.Presistance.Contexts
             (var hash, var salt) = PasswordManager.Hash("123456");
 
             modelBuilder.Entity<User>().HasData(new User { Id = 1, Email = "m@m.com", FullName = "Admin", PasswordHash = hash,PasswordSalt=salt,IsActive=true });
-            modelBuilder.Entity<Survey.Domain.Entities.Survey.Survey>().HasData(new Domain.Entities.Survey.Survey { Id = 1, UserId = 1, Title = "Developer Roles" });
+            modelBuilder.Entity<Survey.Domain.Entities.Survey.Survey>().HasData(new Domain.Entities.Survey.Survey { Id = 1, UserId = 1, Title = "Developer Roles",CreateDate=DateTime.Now });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Question>().HasData(new Domain.Entities.Survey.Question { Id = 1, SurveyId = 1, Title = "Developer Type" });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Question>().HasData(new Domain.Entities.Survey.Question { Id = 2, SurveyId = 1, Title = "Coding as a Hobby ", Description = "Many developers work on code outside of work. About 78% of our respondents say that they code as a hobby. Other responsibilities outside of software can reduce developers' engagement in coding as a hobby; developers who say they have children or other caretaking responsibilities are less likely to code as a hobby. Respondents who are women are also less likely to say they code as a hobby." });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Question>().HasData(new Domain.Entities.Survey.Question { Id = 3, SurveyId = 1, Title = "Years Since Learning to Code ", Description = "Experience" });

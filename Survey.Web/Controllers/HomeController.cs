@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Survey.Application.Services.Survey.Queries;
+using Survey.Application.Services.Survey;
 using Survey.Web.Models;
 
 namespace Survey.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IGetSurveysService _getSurveysService;
-        public HomeController(IGetSurveysService getSurveysService)
+        private readonly ISurveyFasad _surveyServices;
+        public HomeController(ISurveyFasad surveyServices)
         {
-            _getSurveysService = getSurveysService;
+            _surveyServices = surveyServices;
         }
         public IActionResult Index()
         {
-            var model=_getSurveysService.Execute(new Application.Services.Users.Queries.RequestGetUsersDto { Page = 1, Searchkey = "" });
+            var model=_surveyServices.GetSurveys.Execute(new Application.Services.Users.Queries.RequestGetUsersDto { Page = 1, Searchkey = "" });
             return View(model);
         }
 
