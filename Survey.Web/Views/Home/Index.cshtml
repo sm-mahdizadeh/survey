@@ -25,11 +25,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">@survey.Title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@survey.Description</h6>
+                        @*<h6 class="card-subtitle mb-2 text-muted">@survey.Description</h6>*@
                         <p class="card-text">Owner User: @survey.UserFullName</p>
                         <p class="card-text">Create Date: @survey.CreateDate.ToShortDateString()</p>
                         <p class="card-text">Questions Count: @(survey.QuestionsCount)</p>
-                        @if (UserUtility.GetUserId(User) == survey.UserId)
+                        @if (User.Identity.GetId() == survey.UserId)
                         {
                             <a href="/survey/edit/@(survey.Id)" class="card-link">Edit</a>}
                         else

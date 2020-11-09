@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Survey.Application.Services.Users
 {
-    public class UserFasad : BaseService, IUserFasad
+    public class UserFasade : BaseService, IUserFasade
     {
-        public UserFasad(IDatabaseContext context) : base(context) { }
+        public UserFasade(IDatabaseContext context) : base(context) { }
 
 
         private IAddUserService _signin;

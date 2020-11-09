@@ -1,19 +1,22 @@
 ﻿using Survey.Application.Interfaces;
 using Survey.Application.Services.Responds.Commands;
+using Survey.Application.Services.Responds.Queries;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Survey.Application.Services.Responds
 {
-    public class RespondFasad : BaseService, IRespondFasad
+    public class RespondFasade : BaseService, IRespondFasade
     {
-        public RespondFasad(IDatabaseContext context) : base(context) { }
+        public RespondFasade(IDatabaseContext context) : base(context) { }
 
 
         private IAddRespondService _addRespondService;
         public IAddRespondService AddRespond  => _addRespondService = _addRespondService ?? new AddRespondService(Context);
 
+        private IGetRespondService _getRespondService;
+        public IGetRespondService GetRespond => _getRespondService = _getRespondService ?? new GetRespondService(Context);
     }
 
 }

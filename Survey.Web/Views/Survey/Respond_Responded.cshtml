@@ -1,0 +1,13 @@
+﻿@using Survey.Application.Services.Survey.Queries;
+@model GetSurveyDto
+@{ 
+    var respond =(Survey.Application.Services.Responds.Queries.GetRespondDto) ViewBag.Respond;
+}
+
+<h3>@Model.Title</h3>
+<h6>@Model.Description</h6>
+<div class="alert alert-warning">
+    You Responded to this Survey !
+    <br />
+    Respond Date: @respond.CreateDate.ToString()
+</div> 

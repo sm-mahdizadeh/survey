@@ -13,8 +13,4 @@
     <ProjectReference Include="..\Survey.Domain\Survey.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Responds\Queries\" />
-  </ItemGroup>
-
 </Project>

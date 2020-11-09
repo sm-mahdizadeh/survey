@@ -1,4 +1,5 @@
 ﻿using Survey.Application.Interfaces;
+using Survey.Application.Utilites;
 using Survey.Common;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace Survey.Application.Services.Users.Queries
             }
 
 
-            var isVerify = PasswordManager.Verify(password, user.PasswordHash, user.PasswordSalt);
+            var isVerify = new PasswordUtility().Verify(password, user.PasswordHash, user.PasswordSalt);
             if (!isVerify)
             {
                 return new ServiceResultDto<GetUserDto>("ایمیل یا رمز عبور اشتباه است");

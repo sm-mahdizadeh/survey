@@ -50,9 +50,9 @@ namespace Survey.Web
 
             services.AddScoped<IDatabaseContext, DatabaseContext>();
 
-            services.AddScoped<ISurveyFasad, SurveyFasad>();
-            services.AddScoped<IRespondFasad, RespondFasad>();
-            services.AddScoped<IUserFasad, UserFasad>();
+            services.AddScoped<ISurveyFasade, SurveyFasade>();
+            services.AddScoped<IRespondFasade, RespondFasade>();
+            services.AddScoped<IUserFasade, UserFasade>();
 
             services.AddScoped<IAddQuestionService, AddQuestionService>();
             services.AddScoped<IRemoveQuestionService, RemoveQuestionService>();

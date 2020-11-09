@@ -3,7 +3,7 @@ using Survey.Application.Services.Users.Queries;
 
 namespace Survey.Application.Services.Users
 {
-    public interface IUserFasad
+    public interface IUserFasade
     {
         IAddUserService Signin { get; }
         IGetUserService Signup { get; }

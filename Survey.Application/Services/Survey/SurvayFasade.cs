@@ -5,9 +5,9 @@ using Survey.Application.Services.Users.Commands;
 
 namespace Survey.Application.Services.Survey
 {
-    public class SurveyFasad : BaseService, ISurveyFasad
+    public class SurveyFasade : BaseService, ISurveyFasade
     {
-        public SurveyFasad(IDatabaseContext context) : base(context) { }
+        public SurveyFasade(IDatabaseContext context) : base(context) { }
 
 
         private IAddSurveyService _addSurvey;

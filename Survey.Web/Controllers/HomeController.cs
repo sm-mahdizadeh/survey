@@ -7,8 +7,8 @@ namespace Survey.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ISurveyFasad _surveyServices;
-        public HomeController(ISurveyFasad surveyServices)
+        private readonly ISurveyFasade _surveyServices;
+        public HomeController(ISurveyFasade surveyServices)
         {
             _surveyServices = surveyServices;
         }

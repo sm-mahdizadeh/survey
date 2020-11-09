@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Survey.Application.Services.Survey
 {
-    public interface ISurveyFasad
+    public interface ISurveyFasade
     {
         IAddSurveyService AddSurvey { get; }
         IGetSurveyService GetSurvey { get; }

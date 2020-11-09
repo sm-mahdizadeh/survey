@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Survey.Application.Interfaces;
+using Survey.Application.Utilites;
 using Survey.Common;
 using Survey.Domain.Entities.Respond;
 using Survey.Domain.Entities.Survey;
 using Survey.Domain.Entities.Users;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Survey.Presistance.Contexts
 {
@@ -38,7 +35,7 @@ namespace Survey.Presistance.Contexts
         }
         private void SeedData(ModelBuilder modelBuilder)
         {
-            (var hash, var salt) = PasswordManager.Hash("123456");
+            (var hash, var salt) = new PasswordUtility().Hash("123456");
 
             modelBuilder.Entity<User>().HasData(new User { Id = 1, Email = "m@m.com", FullName = "Admin", PasswordHash = hash,PasswordSalt=salt,IsActive=true });
             modelBuilder.Entity<Survey.Domain.Entities.Survey.Survey>().HasData(new Domain.Entities.Survey.Survey { Id = 1, UserId = 1, Title = "Developer Roles",CreateDate=DateTime.Now });

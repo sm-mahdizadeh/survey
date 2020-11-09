@@ -1,0 +1,28 @@
+﻿@{
+    Dictionary<string, string> list = null;
+    if (ViewBag.Breadcrumb != null)
+    {
+        list = (Dictionary<string, string>)ViewBag.Breadcrumb;
+    }
+
+}
+
+@if (list?.Any() == true)
+{
+    var i = 0;
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            @foreach (var item in list)
+            {
+                i++;
+                var cls = "breadcrumb-item";
+                if (i==list.Count())
+                {
+                    cls += " active";
+                }
+                <li class="@cls"><a href="@item.Value">@item.Key</a></li>
+            }
+
+        </ol>
+    </nav>
+}

@@ -1,20 +1,28 @@
 ﻿
 @{
     ViewData["Title"] = "Create New Survey";
+    ViewBag.Breadcrumb = new Dictionary<string, string>() { { "Home", "/" }, { "Survey", "/Survey" }, { "Edit", "/Survey/Create" } };
 }
 
 
-<div class="row">
-    <input class="form-control" placeholder="Title" id="title" />
+<div class="row form-group">
+    <div class="col-12">
+        <input class="form-control" placeholder="Title" id="title" />
+    </div>
 </div>
-<div class="row">
-    <textarea class="form-control" placeholder="Description" id="description"></textarea>
-</div>
-<br />
+<div class="row form-group">
+    <div class="col-12">
+        <textarea class="form-control" placeholder="Description" id="description"></textarea>
+    </div>
 
-<div class="row">
-    <a class="btn btn-secondary">Cancel</a>
-    <a class="btn btn-success" onclick="create()">Save & Next</a>
+</div>
+
+
+<div class="row form-group">
+    <div class="col-12">
+        <a class="btn btn-secondary">Cancel</a>
+        <a class="btn btn-success" onclick="create()">Save & Next</a>
+    </div>
 </div>
 
 <script>
@@ -24,6 +32,14 @@
         var title = $("#title").val();
         var description = $("#description").val();
 
+        if (title == "") {
+            swal.fire(
+                'هشدار!',
+                "Fill Title",
+                'warning'
+            );
+            return;
+        }
         var postData = {
             title: title,
             description: description,

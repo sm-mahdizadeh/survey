@@ -1,4 +1,5 @@
 ﻿using Survey.Application.Interfaces;
+using Survey.Application.Utilites;
 using Survey.Common;
 using Survey.Domain.Entities.Users;
 using System;
@@ -13,7 +14,7 @@ namespace Survey.Application.Services.Users.Commands
 
         public bool Execute(string fullName, string email, string password)
         {
-            (var hash,var salt) = PasswordManager.Hash(password);
+            (var hash,var salt) = new PasswordUtility().Hash(password);
             var user = new User {
                 FullName = fullName,
                 Email = email,

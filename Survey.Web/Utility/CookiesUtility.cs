@@ -36,11 +36,11 @@ namespace Survey.Web.Utility
 
         public Guid GetBrowserId(HttpContext context)
         {
-            string browserId = GetValue(context, "BowserId");
+            string browserId = GetValue(context, "BrowserId");
             if (browserId == null)
             {
                 string value = Guid.NewGuid().ToString();
-                Add(context, "BowserId", value);
+                Add(context, "BrowserId", value);
                 browserId = value;
             }
             Guid guidBowser;

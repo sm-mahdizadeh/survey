@@ -12,8 +12,8 @@ namespace Survey.Web.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserFasad _userServices;
-        public UserController(IUserFasad userServices)
+        private readonly IUserFasade _userServices;
+        public UserController(IUserFasade userServices)
         {
             _userServices = userServices;
         }

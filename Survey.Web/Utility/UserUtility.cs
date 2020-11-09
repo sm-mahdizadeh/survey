@@ -9,7 +9,7 @@ namespace Survey.Web.Utility
 {
     public static class UserUtility
     {
-        public static int? GetUserId(ClaimsPrincipal User)
+        public static int GetUserId(ClaimsPrincipal User,int defaulltValue=0)
         {
             try
             {
@@ -20,38 +20,25 @@ namespace Survey.Web.Utility
             catch (Exception)
             {
 
-                return null;
+                return defaulltValue;
             }
 
         }
 
-        //public static int? Id(this ClaimsPrincipal user)
-        //{
-        //    try
-        //    {
-        //        //var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
-        //        //return userId;
-        //    }
-        //    catch (Exception)
-        //    {
 
-        //        return null;
-        //    }
-        //}
-        //public static int? Id(this IIdentity user)
-        //{
-        //    try
-        //    {
-        //        var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
-        //        return userId;
-        //        return user.Id;
+        public static int GetId(this IIdentity identity,int defaultValue=0)
+        {
+           
+            try
+            {
+                var userId = int.Parse((identity as ClaimsIdentity).FindFirst(ClaimTypes.NameIdentifier).Value);
+                return userId;
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        return null;
-        //    }
-        //}
+                return defaultValue;
+            }
+        }
     }
 }
