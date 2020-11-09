@@ -1,0 +1,32 @@
+﻿@model Dictionary<int, string>
+
+<div class="list-group">
+    <div id="listOption">
+        @if (Model?.Any() == true)
+        {
+            foreach (var item in Model)
+            {
+                <a href="#" class="list-group-item d-flex justify-content-between align-items-center"><span>@item.Value </span> <span class="badge badge-danger badge-pill" onclick="removeOption(@(item.Key));">X</span></a>
+            }
+        }
+        <a href="#" class="list-group-item list-group-item-action" @*data-toggle="modal" data-target="#modalOption"*@ onclick="HideOptionList()">+ Add New Option</a>
+    </div>
+    <div id="newOption" style="display:none">
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Option Title:</label>
+                    <input type="text" class="form-control" id="newOptionTitle">
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Option Description:</label>
+                    <textarea class="form-control" id="newOptionDescription"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @*data-dismiss="modal"*@ onclick="ShowOptionList()">Close</button>
+            <button type="button" class="btn btn-primary" onclick="createNewOption();">Submit</button>
+        </div>
+    </div>
+</div>

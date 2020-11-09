@@ -32,7 +32,7 @@ namespace Survey.Web.Controllers
         {
             var result = _userServices.Signin.Execute(fullName, email, password);
 
-            return Json(new { IsSuccess = result });
+            return Json(new { IsSuccess = result.IsSuccess,Message=result.Message });
         }
 
 

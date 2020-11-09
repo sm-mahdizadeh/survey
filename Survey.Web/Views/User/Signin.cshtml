@@ -59,6 +59,23 @@
         var email = $("#email").val();
         var password = $("#password").val();
 
+        if (email == '') {
+            swal.fire(
+                'warning!',
+                'Please Enter Email',
+                'warning'
+            );
+            return;
+        }
+        if (password == '') {
+            swal.fire(
+                'warning!',
+                'Please Enter Password',
+                'warning'
+            );
+            return;
+        }
+
         var data = {
             email: email,
             password: password,
@@ -74,7 +91,7 @@
                 else {
 
                     swal.fire(
-                        'هشدار!',
+                        'warning!',
                         result.message,
                         'warning'
                     );
@@ -82,7 +99,7 @@
             },
             error: function (request, status, error) {
                 swal.fire(
-                    'هشدار!',
+                    'warning!',
                     request.responseText,
                     'warning'
                 );

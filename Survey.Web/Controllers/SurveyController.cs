@@ -48,6 +48,14 @@ namespace Survey.Web.Controllers
             var model = _surveyServices.GetSurvey.Execute(id);
             return View(model);
         }
+
+        [Authorize]
+        public async Task< JsonResult> Remove(int id)
+        {
+            var result =await _surveyServices.RemoveSurvey.ExecuteAsync(User.Identity.GetId(), id);
+            return Json(new {IsSuccess=result });
+        }
+
         public IActionResult Respond(int id)
         {
             var cookies = new CookiesUtility();

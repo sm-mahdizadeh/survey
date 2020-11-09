@@ -54,9 +54,6 @@ namespace Survey.Web
             services.AddScoped<IRespondFasade, RespondFasade>();
             services.AddScoped<IUserFasade, UserFasade>();
 
-            services.AddScoped<IAddQuestionService, AddQuestionService>();
-            services.AddScoped<IRemoveQuestionService, RemoveQuestionService>();
-
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddEntityFrameworkSqlServer().AddDbContext<DatabaseContext>(option => option.UseSqlServer(connectionString));
 

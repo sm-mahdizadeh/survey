@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Survey.Application.Services.Responds.Queries.GetRespondDto>
+
+<div class="list-group">
+    <div id="listOption">
+        @if (Model?.Any() == true)
+        {
+            foreach (var item in Model)
+            {
+                <a href="/respond/index/@(item.Id)" class="list-group-item d-flex justify-content-between align-items-center"><span>@item.CreateDate.ToString() </span> @*<span class="badge badge-danger badge-pill" ></span>*@</a>
+            }
+        }
+    </div>
+  
+</div>

@@ -2,7 +2,7 @@
 @model GetSurveyDto
 @{
     ViewData["Title"] = "Edit";
-    ViewBag.Breadcrumb = new Dictionary<string, string>() { { "Home", "/" }, { "Survey", "/Survey" }, { "Edit", "/Survey/Edit/"+Model.Id } };
+    ViewBag.Breadcrumb = new Dictionary<string, string>() { { "Home", "/" }, { "Survey", "/Survey" }, { "Edit", "/Survey/Edit/" + Model.Id } };
 }
 
 
@@ -15,49 +15,55 @@
     <li class="nav-item">
         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="profile" aria-selected="false">Questions</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="profile" aria-selected="false">Responds</a>
+    </li>
 </ul>
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
-        <div class="row">
-            <div class="col-12">
-                <input class="form-control" placeholder="Title" value="@Model.Title" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <textarea class="form-control" placeholder="Description" value="@Model.Description"></textarea>
-            </div>
 
+
+        <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Title:</label>
+            <input class="form-control" placeholder="Title" value="@Model.Title" />
         </div>
+        <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Description:</label>
+            <textarea class="form-control" placeholder="Description" value="@Model.Description"></textarea>
+        </div>
+
         <div class="row">
             <div class="col-12">
-                <a class="btn btn-secondary">Cancel</a>
-                <a class="btn btn-danger">Remove</a>
+                <a class="btn btn-secondary" href="/">Cancel</a>
+                <a class="btn btn-danger" onclick="removeSurvey()">Remove</a>
                 <a class="btn btn-warning">Diactive</a>
                 <a class="btn btn-success">Submit</a>
             </div>
 
         </div>
     </div>
-    
+
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="profile-tab">
         <div class="list-group">
             @if (Model.Questions?.Any() == true)
             {
                 foreach (var item in Model.Questions)
                 {
-                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center">@item.Title<span class="badge badge-danger badge-pill" onclick="removeOption(@(item.Id));">X</span></a>
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center"><span onclick="showOptions(@(item.Id),'@item.Title');">@item.Title </span> <span class="badge badge-danger badge-pill" onclick="removeQuestion(@(item.Id));">X</span></a>
                 }
             }
-            <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModal">+ Add New Question</a>
+            <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#modalQuestion">+ Add New Question</a>
         </div>
+    </div>
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="profile-tab">
+        <div id="divRespond"></div>
     </div>
 </div>
 
 
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,13 +92,77 @@
     </div>
 </div>
 
-<script>
-    var html = `<div class="row">
-    <input id='newQuestionTitle' class="form-control" placeholder="Title" value="" />
+<div class="modal " id="modalOptions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="optionQuestionTitle">--</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="divOptions"></div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="row">
-    <textarea id='newQuestionDescription' class="form-control" placeholder="Description" value=""></textarea>
-</div>`;
+<script>
+
+      function removeSurvey() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Remove the Survey?',
+            showCancelButton: true,
+            confirmButtonText: `Remove`,
+        }).then((result) => {
+            if (result.value) {
+                 var postData = {
+                    id:'@Model.Id'
+                };
+
+                $.ajax({
+
+                    type: "POST",
+                        url: "/Survey/remove",
+                            data: postData,
+                                success: function (result) {
+                                    if (result.isSuccess == true) {
+                                        swal.fire(
+                                            'Message!',
+                                            "Success",
+                                            'info'
+                                        ).then((result) => { window.location.href="/" });
+                                    }
+                                    else {
+
+                                        swal.fire(
+                                            'هشدار!',
+                                            data.message,
+                                            'warning'
+                                        );
+                                    }
+                                },
+                    error: function (request, status, error) {
+                        swal.fire(
+                            'هشدار!',
+                            request.responseText,
+                            'warning'
+                        );
+                    }
+
+                });
+        }
+        });
+    }
+
+    var currentQuestionId;
+    function showOptions(id, title) {
+        currentQuestionId = id;
+        $("#divOptions").load("/Option/List/" + id);
+        $("#optionQuestionTitle").html(title);
+        $("#modalOptions").modal('show');
+    }
     function createNewQuestion() {
         var postData = {
                     surveyId:'@Model.Id',
@@ -131,16 +201,14 @@
                     }
                 });
     }
-    function removeOption(id) {
+    function removeQuestion(id) {
         Swal.fire({
             icon: 'warning',
-            title: 'Oops...',
-            text: 'Something went wrong!',
-            footer: '<a href>Why do I have this issue?</a>',
+            title: 'Remove the Question?',
             showCancelButton: true,
-            confirmButtonText: `Confirm`,
+            confirmButtonText: `Remove`,
         }).then((result) => {
-            //if (result.isConfirm) {
+            if (result.value) {
                  var postData = {
                     surveyId:'@Model.Id',
                   questionId:id
@@ -177,9 +245,103 @@
                     }
 
                 });
-        //}
+        }
         });
     }
 
+     function createNewOption() {
+        var postData = {
+                    questionId:currentQuestionId,
+                    title: $("#newOptionTitle").val(),
+                    description: $("#newOptionDescription").val(),
+                };
+
+                $.ajax({
+
+                    type: "POST",
+                    url: "/option/create",
+                    data: postData,
+                    success: function (result) {
+                        if (result.isSuccess == true) {
+                            $("#divOptions").load("/Option/List/" + currentQuestionId);
+                        }
+                        else {
+
+                            swal.fire(
+                                'هشدار!',
+                                data.message,
+                                'warning'
+                            );
+                        }
+                    },
+                    error: function (request, status, error) {
+                        swal.fire(
+                            'هشدار!',
+                            request.responseText,
+                            'warning'
+                        );
+                    }
+                });
+    }
+
+ function removeOption(id) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Remove the Option?',
+
+            showCancelButton: true,
+            confirmButtonText: `Remove`,
+        }).then((result) => {
+            if (result.value) {
+                 var postData = {
+                  id:id
+                };
+
+                $.ajax({
+
+                    type: "POST",
+                        url: "/Option/remove",
+                            data: postData,
+                                success: function (result) {
+                                    if (result.isSuccess == true) {
+                                        $("#divOptions").load("/Option/List/" + currentQuestionId);
+                                        ShowOptionList();
+                                    }
+                                    else {
+
+                                        swal.fire(
+                                            'هشدار!',
+                                            data.message,
+                                            'warning'
+                                        );
+                                    }
+                                },
+                    error: function (request, status, error) {
+                        swal.fire(
+                            'هشدار!',
+                            request.responseText,
+                            'warning'
+                        );
+                    }
+
+                });
+        }
+        });
+    }
+    function HideOptionList() {
+        $("#listOption").hide();
+        $("#newOption").show();
+    }
+    function ShowOptionList() {
+        $("#listOption").show();
+        $("#newOption").hide();
+    }
 </script>
 
+@section scripts{
+<script>
+    $(function () {
+        $("#divRespond").load("/Respond/List/" + @Model.Id)
+    });
+</script>
+}

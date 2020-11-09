@@ -1,4 +1,5 @@
 ﻿using Survey.Application.Interfaces;
+using Survey.Application.Services.Users.Queries;
 using Survey.Application.Utilites;
 using Survey.Common;
 using Survey.Domain.Entities.Users;
@@ -12,10 +13,16 @@ namespace Survey.Application.Services.Users.Commands
     {
         public AddUserService(IDatabaseContext context) : base(context) { }
 
-        public bool Execute(string fullName, string email, string password)
+        public ServiceResultDto<bool> Execute(string fullName, string email, string password)
         {
-            (var hash,var salt) = new PasswordUtility().Hash(password);
-            var user = new User {
+            var isValidEmail = StringUtility.IsValidEmail(email);
+            if (!isValidEmail)
+            {
+                return new ServiceResultDto<bool>("Invalid Email Address");
+            }
+            (var hash, var salt) = new PasswordUtility().Hash(password);
+            var user = new User
+            {
                 FullName = fullName,
                 Email = email,
                 PasswordHash = hash,
@@ -23,7 +30,9 @@ namespace Survey.Application.Services.Users.Commands
                 IsActive = true
             };
             Context.Users.Add(user);
-            return Context.SaveChanges() > 0;
+            var result= Context.SaveChanges() > 0;
+
+            return new ServiceResultDto<bool>(result);
         }
     }
 }

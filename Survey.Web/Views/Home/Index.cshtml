@@ -31,10 +31,10 @@
                         <p class="card-text">Questions Count: @(survey.QuestionsCount)</p>
                         @if (User.Identity.GetId() == survey.UserId)
                         {
-                            <a href="/survey/edit/@(survey.Id)" class="card-link">Edit</a>}
+                            <a href="/survey/edit/@(survey.Id)" class="btn btn-outline-primary btn-block">Edit</a>}
                         else
                         {
-                        <a href="/survey/Respond/@(survey.Id)" class="card-link">Respond</a>
+                        <a href="/survey/Respond/@(survey.Id)" class="btn btn-outline-success btn-block">Respond</a>
                         }
                     </div>
                 </div>

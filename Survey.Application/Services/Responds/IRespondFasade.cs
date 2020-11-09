@@ -10,5 +10,6 @@ namespace Survey.Application.Services.Responds
     {
          IAddRespondService AddRespond { get; }
          IGetRespondService GetRespond { get; }
+         IGetRespondsService GetResponds { get; }
     }
 }

@@ -1,31 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Survey.Application.Services.Survey.Commands;
+﻿using Microsoft.AspNetCore.Mvc;
+using Survey.Application.Services.Survey;
+using Survey.Web.Utility;
 
 namespace Survey.Web.Controllers
 {
     public class QuestionController : Controller
     {
-        private readonly IAddQuestionService _addQuestionService;
-        private readonly IRemoveQuestionService _removeQuestionService;
-        public QuestionController(IAddQuestionService addQuestionService,IRemoveQuestionService removeQuestionService)
+        private readonly ISurveyFasade _surveyServives;
+        public QuestionController(ISurveyFasade surveyServives)
         {
-            _addQuestionService = addQuestionService;
-            _removeQuestionService = removeQuestionService;
+            _surveyServives = surveyServives;
         }
         [HttpPost]
         public JsonResult Create(int surveyId, string title,string description)
         {
-            var result = _addQuestionService.Execute(1, surveyId, title, description);
+            var result =_surveyServives.AddQuestion.Execute(User.Identity.GetId(), surveyId, title, description);
             return Json(new { IsSuccess = true, Data = result });
         }
         public JsonResult Remove(int surveyId,int questionId)
         {
-            var result = _removeQuestionService.Execute(surveyId,questionId);
+            var result =_surveyServives.RemoveQuestion.Execute(surveyId,questionId);
             return Json(new { IsSuccess = true, Data = result });
         }
+      
     }
 }

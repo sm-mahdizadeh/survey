@@ -17,6 +17,9 @@ namespace Survey.Application.Services.Responds
 
         private IGetRespondService _getRespondService;
         public IGetRespondService GetRespond => _getRespondService = _getRespondService ?? new GetRespondService(Context);
+
+        private IGetRespondsService _getRespondsService;
+        public IGetRespondsService GetResponds => _getRespondsService = _getRespondsService ?? new GetRespondsService(Context);
     }
 
 }
