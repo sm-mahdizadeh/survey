@@ -28,9 +28,9 @@ namespace Survey.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult Signup(string fullName,string email,string password)
+        public async Task< JsonResult> Signup(string fullName,string email,string password)
         {
-            var result = _userServices.Signin.Execute(fullName, email, password);
+            var result = await _userServices.Signin.ExecuteAsync(fullName, email, password);
 
             return Json(new { IsSuccess = result.IsSuccess,Message=result.Message });
         }

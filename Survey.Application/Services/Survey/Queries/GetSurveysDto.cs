@@ -4,7 +4,6 @@ using Survey.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Survey.Application.Services.Survey.Queries
 {
@@ -36,6 +35,7 @@ namespace Survey.Application.Services.Survey.Queries
                 QuestionsCount= Context.Questions.Count(c=>c.SurveyId==s.Id)
             }).ToList();
         }
+     
     }
 
     public class GetSurveysDto

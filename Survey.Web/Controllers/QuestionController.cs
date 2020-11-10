@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Survey.Application.Services.Survey;
 using Survey.Web.Utility;
+using System.Threading.Tasks;
 
 namespace Survey.Web.Controllers
 {
@@ -12,16 +13,16 @@ namespace Survey.Web.Controllers
             _surveyServives = surveyServives;
         }
         [HttpPost]
-        public JsonResult Create(int surveyId, string title,string description)
+        public async Task<JsonResult> Create(int surveyId, string title, string description)
         {
-            var result =_surveyServives.AddQuestion.Execute(User.Identity.GetId(), surveyId, title, description);
+            var result = await _surveyServives.AddQuestion.ExecuteAsync(User.Identity.GetId(), surveyId, title, description);
             return Json(new { IsSuccess = true, Data = result });
         }
-        public JsonResult Remove(int surveyId,int questionId)
+        public async Task<JsonResult> Remove(int surveyId, int questionId)
         {
-            var result =_surveyServives.RemoveQuestion.Execute(surveyId,questionId);
+            var result = await _surveyServives.RemoveQuestion.ExecuteAsync(surveyId, questionId);
             return Json(new { IsSuccess = true, Data = result });
         }
-      
+
     }
 }

@@ -36,9 +36,9 @@ namespace Survey.Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public JsonResult Create(string title, string description)
+        public async Task<JsonResult> Create(string title, string description)
         {
-            var result = _surveyServices.AddSurvey.Exeute(User.Identity.GetId(), title, description);
+            var result = await _surveyServices.AddSurvey.ExeuteAsync(User.Identity.GetId(), title, description);
             return Json(new { IsSuccess = true, Data = result });
         }
 
@@ -50,30 +50,30 @@ namespace Survey.Web.Controllers
         }
 
         [Authorize]
-        public async Task< JsonResult> Remove(int id)
+        public async Task<JsonResult> Remove(int id)
         {
-            var result =await _surveyServices.RemoveSurvey.ExecuteAsync(User.Identity.GetId(), id);
-            return Json(new {IsSuccess=result });
+            var result = await _surveyServices.RemoveSurvey.ExecuteAsync(User.Identity.GetId(), id);
+            return Json(new { IsSuccess = result });
         }
 
         public IActionResult Respond(int id)
         {
             var cookies = new CookiesUtility();
             var browserId = cookies.GetBrowserId(HttpContext);
-           var respond= _respondServices.GetRespond.Execute(id, User.Identity.GetId(), HttpContext.Connection.RemoteIpAddress.ToString(), HttpContext.UserInfo());
+            var respond = _respondServices.GetRespond.Execute(id, User.Identity.GetId(), HttpContext.Connection.RemoteIpAddress.ToString(), HttpContext.UserInfo());
             var model = _surveyServices.GetSurvey.Execute(id);
             if (respond != null)
             {
                 ViewBag.Respond = respond;
-                return View("Respond_Responded",model);
+                return View("Respond_Responded", model);
             }
-       
+
             return View(model);
         }
 
 
         [HttpPost]
-        public JsonResult Respond(int id, string answers)
+        public async Task<JsonResult> Respond(int id, string answers)
         {
 
             var list = answers.Split(';', StringSplitOptions.RemoveEmptyEntries);
@@ -83,7 +83,7 @@ namespace Survey.Web.Controllers
                 answerDic.Add(int.Parse(item.Split(',')[0]), int.Parse(item.Split(',')[1]));
             }
 
-            var result = _respondServices.AddRespond.Execute(id, User.Identity.GetId(), HttpContext.Connection.RemoteIpAddress.ToString(),HttpContext.UserInfo(), answerDic.Select(s => s.Value));
+            var result = await _respondServices.AddRespond.ExecuteAsync(id, User.Identity.GetId(), HttpContext.Connection.RemoteIpAddress.ToString(), HttpContext.UserInfo(), answerDic.Select(s => s.Value));
             return Json(new { IsSuccess = result });
         }
 

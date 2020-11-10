@@ -6,6 +6,7 @@ using Survey.Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Survey.Application.Services.Users.Commands
 {
@@ -34,5 +35,29 @@ namespace Survey.Application.Services.Users.Commands
 
             return new ServiceResultDto<bool>(result);
         }
+
+        public async Task< ServiceResultDto<bool>> ExecuteAsync(string fullName, string email, string password)
+        {
+            var isValidEmail = StringUtility.IsValidEmail(email);
+            if (!isValidEmail)
+            {
+                return new ServiceResultDto<bool>("Invalid Email Address");
+            }
+            (var hash, var salt) = new PasswordUtility().Hash(password);
+            var user = new User
+            {
+                FullName = fullName,
+                Email = email,
+                PasswordHash = hash,
+                PasswordSalt = salt,
+                IsActive = true
+            };
+            Context.Users.Add(user);
+            var result =await Context.SaveChangesAsync() > 0;
+
+            return new ServiceResultDto<bool>(result);
+        }
+
+
     }
 }
