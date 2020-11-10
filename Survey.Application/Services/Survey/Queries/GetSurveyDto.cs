@@ -1,11 +1,7 @@
 ﻿using Survey.Application.Interfaces;
-using Survey.Application.Services.Users.Queries;
-using Survey.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
+using Microsoft.EntityFrameworkCore;
 namespace Survey.Application.Services.Survey.Queries
 {
     public interface IGetSurveyService
@@ -19,7 +15,7 @@ namespace Survey.Application.Services.Survey.Queries
 
         public GetSurveyDto Execute(int id)
         {
-            var survey = Context.Surveys.Find(id);
+            var survey = Context.Surveys.Include(a=>a.User).Include(b=>b.Questions).ThenInclude(b=>b.Options).FirstOrDefault(f=>f.Id==id);
 
             return new GetSurveyDto
             {
@@ -29,13 +25,13 @@ namespace Survey.Application.Services.Survey.Queries
                 CreateDate = survey.CreateDate,
                 IsActive = survey.IsActive,
                 UserId = survey.UserId,
-                UserFullName = Context.Users.FirstOrDefault(f => f.Id == survey.UserId).FullName,
-                Questions = Context.Questions.Where(w=>w.SurveyId==id)?.Select(s => new GetQuestionsDto
+                UserFullName =survey.User.FullName,
+                Questions = survey.Questions.Where(w=>w.SurveyId==id)?.Select(s => new GetQuestionsDto
                 {
                     Id = s.Id,
                     Title = s.Title,
                     Description = s.Description,
-                    Options= Context.Options.Where(w => w.QuestionId == s.Id).Select(o => new GetOptionsDto {Id =o.Id,Title=o.Title,Description=o.Description}).ToArray()
+                    Options= s.Options.Select(o => new GetOptionsDto {Id =o.Id,Title=o.Title,Description=o.Description}).ToArray()
                 }).ToArray()
             };
         }

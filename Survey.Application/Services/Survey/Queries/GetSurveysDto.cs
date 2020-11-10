@@ -4,6 +4,7 @@ using Survey.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Survey.Application.Services.Survey.Queries
 {
@@ -18,7 +19,7 @@ namespace Survey.Application.Services.Survey.Queries
      
         public List<GetSurveysDto> Execute(RequestGetUsersDto request)
         {
-            var surveys = Context.Surveys.AsQueryable();
+            var surveys = Context.Surveys.Include(a=>a.User).Include(b=>b.Questions).AsQueryable();
             if (!string.IsNullOrWhiteSpace(request.Searchkey))
             {
                 surveys = surveys.Where(w => w.Title.Contains(request.Searchkey) || w.Description.Contains(request.Searchkey));
@@ -31,8 +32,8 @@ namespace Survey.Application.Services.Survey.Queries
                 CreateDate=s.CreateDate,
                 IsActive=s.IsActive,
                 UserId=s.UserId,
-                UserFullName=Context.Users.FirstOrDefault(f=>f.Id==s.UserId).FullName,
-                QuestionsCount= Context.Questions.Count(c=>c.SurveyId==s.Id)
+                UserFullName=s.User.FullName,
+                QuestionsCount= s.Questions.Count()
             }).ToList();
         }
      
